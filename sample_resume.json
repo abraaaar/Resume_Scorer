@@ -1,0 +1,75 @@
+{
+  "resume_id": "aditya_kushal_s_resume_e6978c9d",
+  "source_file": "Aditya_Kushal_s_Resume.pdf",
+  "contact_info": {
+    "email": "adityakushal34@gmail.com",
+    "phone": "+91 97664 58874",
+    "github": "github.com/AKxy4321"
+  },
+  "skills": [
+    "APIs", "Cohere API", "Compression", "Computer Vision", "Conda",
+    "Deep Learning", "Git", "GitHub", "Machine Learning", "Model Pruning",
+    "NumPy", "Pandas", "Pip", "PyTorch", "Python", "SQL", "Scikit-learn",
+    "Tableau", "Tavily API", "TensorFlow", "Transfer Learning", "YOLOv7", "YOLOv8"
+  ],
+  "experience": [
+    {
+      "title": "Deep Learning Intern",
+      "company": "VectraTech Global Bengaluru, KA",
+      "duration": "Jun. 2024 – May 2025",
+      "responsibilities": [
+        "Implemented BIRADS classification (VGG16) and Breast Cancer Object Detection (YOLOv7)",
+        "Trained Breast Density Estimation model on VGG16, reaching 99.76% accuracy on public test sets",
+        "Generated robust training/testing samples with Augmentor for data augmentation, improving generalization",
+        "Designed deep learning models for breast cancer detection using annotated mammography datasets"
+      ],
+      "tech_stack": ["Deep Learning", "PyTorch", "YOLOv7", "VGG16"]
+    },
+    {
+      "title": "Artificial Intelligence Intern",
+      "company": "Shaale Bengaluru, KA",
+      "duration": "Aug. 2023 – May 2024",
+      "responsibilities": [
+        "Enhanced retrieval relevance with Cohere Reranker API, boosting response quality for domain-specific queries",
+        "Integrated Tavily Web Search API to provide real-time external knowledge, extending chatbot capabilities",
+        "Built a domain-specific chatbot integrating OpenAI API with company knowledge base, improving response"
+      ],
+      "tech_stack": ["Cohere API", "Tavily API", "OpenAI API", "RAG"]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Deep Model Compression",
+      "description": [
+        "Applied structured pruning to CNNs (LeNet-5, VGG-16, ResNet-50, DenseNet-121) on MNIST and CIFAR-10",
+        "Reduced parameters by up to 99.6% and FLOPs by 98.5% with only 1.14–5.09% accuracy drop",
+        "Achieved 14.5× model size reduction (VGG-16), enabling edge deployment"
+      ],
+      "tech_stack": ["LeNet-5", "VGG-16", "ResNet-50", "DenseNet-121", "PyTorch"]
+    },
+    {
+      "name": "Obstacle Avoidance System for Visually Impaired",
+      "description": [
+        "Trained a YOLOv8-nano detector for potholes, poles, vehicles, and roadside stalls",
+        "Added auditory feedback to guide visually impaired users during navigation"
+      ],
+      "tech_stack": ["YOLOv8", "Python", "Computer Vision"]
+    },
+    {
+      "name": "PDFBot Llama",
+      "description": [
+        "Built three interfaces: Jupyter (OpenAI), Jupyter (Ollama), and Gradio web interface",
+        "Processed PDFs up to 200 pages efficiently",
+        "Achieved approximately 90% answer accuracy with 28s average response time due to local hardware constraints"
+      ],
+      "tech_stack": ["Ollama", "OpenAI API", "Gradio", "RAG", "LLM"]
+    }
+  ],
+  "education": [
+    {
+      "institution": "RV University – CGPA: 9.54/10 Bengaluru, KA",
+      "year": "2022"
+    }
+  ],
+  "certifications": []
+}

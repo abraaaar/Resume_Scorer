@@ -1,0 +1,16 @@
+We are looking for a Machine Learning Engineer with strong Python skills and hands-on experience in deep learning frameworks such as PyTorch and TensorFlow.
+
+Requirements:
+- 1-2 years of experience in deep learning, computer vision, or NLP
+- Proficiency in Python, NumPy, Pandas, and Scikit-learn
+- Experience training and fine-tuning CNN-based models (e.g. ResNet, VGG, YOLO)
+- Familiarity with model optimization techniques: pruning, quantization, distillation
+- Experience with REST APIs and integrating third-party AI services (OpenAI, Cohere, etc.)
+- Version control using Git and GitHub
+- Exposure to RAG pipelines, LLMs, or chatbot development is a strong plus
+- Strong understanding of model evaluation, data augmentation, and generalization techniques
+
+Preferred:
+- Experience with edge deployment of ML models
+- Familiarity with SQL and data visualization tools (Tableau)
+- Conda / pip environment management
