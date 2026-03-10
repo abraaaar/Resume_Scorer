@@ -1,7 +1,14 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Union
+
+import json
+from pathlib import Path
+
+# pdf/docx support
+from PyPDF2 import PdfReader
+import docx
 
 from scorer import ResumeScorer, ResumeData, DEFAULT_WEIGHTS, DEFAULT_MODEL
 
@@ -71,9 +78,6 @@ def sample():
 
     This lets the frontend preload data for demonstration purposes.
     """
-    import json
-    from pathlib import Path
-
     jd_path = Path(__file__).parent / "sample_jd.txt"
     resume_path = Path(__file__).parent / "sample_resume.json"
     jd_text = jd_path.read_text(encoding="utf-8") if jd_path.exists() else ""
@@ -82,3 +86,92 @@ def sample():
         with open(resume_path) as f:
             resume_json = json.load(f)
     return {"jd": jd_text, "resume": resume_json}
+
+
+# ---- feedback helpers and endpoint ----
+
+def _extract_text_file(upload: UploadFile) -> str | dict:
+    """Read an uploaded file and return either plain text or a dict (if JSON)."""
+    suffix = Path(upload.filename).suffix.lower()
+    data = upload.file.read()
+    # JSON case
+    if suffix == ".json":
+        try:
+            return json.loads(data.decode("utf-8"))
+        except Exception:
+            return {}
+    # plain text types
+    if suffix in {".txt", ".md", ".html"}:
+        return data.decode("utf-8", errors="ignore")
+    # PDF
+    if suffix == ".pdf":
+        try:
+            reader = PdfReader(upload.file)
+            texts = []
+            for page in reader.pages:
+                texts.append(page.extract_text() or "")
+            return "\n".join(texts)
+        except Exception:
+            return ""
+    # DOCX
+    if suffix in {".docx", ".doc"}:
+        try:
+            doc = docx.Document(upload.file)
+            return "\n".join(p.text for p in doc.paragraphs)
+        except Exception:
+            return ""
+    # fallback
+    try:
+        return data.decode("utf-8", errors="ignore")
+    except Exception:
+        return ""
+
+
+@app.post("/feedback")
+async def feedback(
+    jd_file: UploadFile = File(...),
+    resume_file: UploadFile = File(...),
+):
+    """Generate simple feedback given a JD file and a resume file.
+
+    The files may be text, JSON, PDF or DOCX.  The response contains
+    a short message and the raw scores used to build it.
+    """
+    jd = _extract_text_file(jd_file)
+    resume_data = _extract_text_file(resume_file)
+
+    # convert resume_data to ResumeData if it's a dict, otherwise treat as
+    # skills-only text.
+    if isinstance(resume_data, dict):
+        resume_obj = ResumeData.from_dict(resume_data)
+    else:
+        resume_obj = ResumeData(
+            resume_id="uploaded",
+            source_file=resume_file.filename,
+            skills=[resume_data],
+            experience=[],
+            projects=[],
+        )
+
+    try:
+        scorer = ResumeScorer()
+        scored = scorer.score(jd, [resume_obj])[0]
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
+
+    # build feedback text
+    notes = []
+    if scored.skills_score < 0.5:
+        notes.append("Consider adding more relevant skills to your resume.")
+    else:
+        notes.append("Skills section matches the JD well.")
+    if scored.experience_score < 0.5:
+        notes.append("Experience details could be more closely aligned with the job.")
+    else:
+        notes.append("Experience section looks good.")
+    if scored.projects_score < 0.5:
+        notes.append("Including more project descriptions may help.")
+    else:
+        notes.append("Projects seem relevant.")
+
+    return {"feedback": " ".join(notes), "scores": scored.as_dict()}
